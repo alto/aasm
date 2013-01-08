@@ -36,7 +36,7 @@ module AASM
         base.extend AASM::Persistence::ActiveRecordPersistence::ClassMethods
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::InstanceMethods)
         base.send(:include, AASM::Persistence::ReadState) unless base.method_defined?(:aasm_read_state)
-        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_stat
+        base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
         base.before_create(:aasm_ensure_initial_state)
 
