@@ -38,13 +38,8 @@ module AASM
         base.send(:include, AASM::Persistence::ReadState) unless base.method_defined?(:aasm_read_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteState) unless base.method_defined?(:aasm_write_state)
         base.send(:include, AASM::Persistence::ActiveRecordPersistence::WriteStateWithoutPersistence) unless base.method_defined?(:aasm_write_state_without_persistence)
-        base.before_create(:aasm_ensure_initial_state)
-
-        if ActiveRecord::VERSION::MAJOR >= 3
-          base.before_validation(:aasm_ensure_initial_state, :on => :create)
-        else
-          base.before_validation_on_create(:aasm_ensure_initial_state)
-        end
+        
+        base.after_initialize :set_initial_state
       end
 
       module ClassMethods
@@ -96,6 +91,10 @@ module AASM
         end
 
         private
+        
+        def set_initial_state
+          aasm_enter_initial_state  if self.new_record?
+        end
 
         # Ensures that if the aasm_state column is nil and the record is new
         # that the initial state gets populated before validation on create
